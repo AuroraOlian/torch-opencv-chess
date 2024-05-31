@@ -9,7 +9,6 @@ import Global_Params
 
 import torch
 from torch import nn
-from torch.nn import functional as F
 
 from torch.nn import (
     Conv2d,
@@ -22,9 +21,6 @@ from torch.nn import (
 )
 
 from torch.utils.tensorboard.writer import SummaryWriter
-
-import torchvision
-from torch.utils.data import DataLoader
 
 
 # 通过创建data.Dataset子类Mydataset来创建输入
@@ -50,8 +46,8 @@ all_imgs_path = glob.glob(r"./data/*/*.png")  # 数据文件夹路径，根据�
 # print(var)
 
 # 利用自定义类Mydataset创建对象weather_dataset
-weather_dataset = Mydataset(all_imgs_path)
-print(len(weather_dataset))  # 返回文件夹中图片总个数
+dataset = Mydataset(all_imgs_path)
+print(len(dataset))  # 返回文件夹中图片总个数
 
 
 chess_pieces_types = Global_Params.Chess_pieces_types
@@ -72,8 +68,7 @@ size = Global_Params.Size
 # 对数据进行转换处理
 transform = transforms.Compose(
     [
-        # transforms.Resize((96, 96)),  # 做的第一步转换
-        transforms.Resize((size, size)),  # 做的第一步转换
+        transforms.Resize((size, size)),  # 第一步转换
         transforms.ToTensor(),  # 第二步转换，作用：第一转换成Tensor，第二将图片取值范围转换成0-1之间，第三会将channel置前
     ]
 )
@@ -102,12 +97,10 @@ class Mydatasetpro(data.Dataset):
 
 
 BATCH_SIZE = 50
-weather_dataset = Mydatasetpro(all_imgs_path, all_labels, transform)
-wheather_datalodaer = data.DataLoader(
-    weather_dataset, batch_size=BATCH_SIZE, shuffle=True
-)
+dataset = Mydatasetpro(all_imgs_path, all_labels, transform)
+datalodaer = data.DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-imgs_batch, labels_batch = next(iter(wheather_datalodaer))
+imgs_batch, labels_batch = next(iter(datalodaer))
 print(imgs_batch.shape)
 
 plt.figure(figsize=(12, 8))
@@ -133,7 +126,7 @@ print(s)
 train_imgs = all_imgs_path[:s]
 train_labels = all_labels[:s]
 test_imgs = all_imgs_path[s:]
-# test_labels = all_imgs_path[s:]
+# test_labels = all_imgs_path[s:] # This is a fucking error, which waste a lot of my timeF
 test_labels = all_labels[s:]
 train_dataset = Mydatasetpro(train_imgs, train_labels, transform)  # TrainSet TensorData
 test_dataset = Mydatasetpro(test_imgs, test_labels, transform)  # TestSet TensorData
@@ -191,10 +184,12 @@ for epoch in range(epochs):
         images, labels = data
         labels = torch.tensor(labels, dtype=torch.long)
         outputs = model(images)
+
         # check the property
         # print(images, labels, outputs)
         # print(images.shape, labels.shape, outputs.shape)
         # print(images.dtype, outputs.dtype, labels.dtype)
+
         loss = loss_fn(outputs, labels)
 
         # optimizer optimize the model
@@ -211,7 +206,6 @@ for epoch in range(epochs):
     correct = 0
     model.eval()
     with torch.no_grad():
-        # for data in train_dataloader:
         for data in test_dataloader:
             images, labels = data
             labels = torch.tensor(labels, dtype=torch.long)

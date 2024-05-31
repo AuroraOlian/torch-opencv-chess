@@ -135,11 +135,11 @@ if circles is not None:
 
 
 # Display the original image with detected circles
-# for i in circles[0, :]:
-#     cv2.circle(image, (i[0], i[1]), i[2], (0, 255, 0), 2)
-#     cv2.circle(image, (i[0], i[1]), 2, (0, 0, 255), -1)
+for i in circles[0, :]:
+    cv2.circle(image, (i[0], i[1]), i[2], (0, 255, 0), 2)
+    cv2.circle(image, (i[0], i[1]), 2, (0, 0, 255), -1)
 
 # Show the result
-# plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-# plt.axis("off")
-# plt.show()
+plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+plt.axis("off")
+plt.show()

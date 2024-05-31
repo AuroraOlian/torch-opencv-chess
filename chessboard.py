@@ -2,12 +2,8 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 from scipy.ndimage import rotate
-import os
 import Global_Params
-import random
-import glob
 import torch
-from torch.utils import data
 from PIL import Image
 import numpy as np
 from torchvision import transforms
@@ -16,7 +12,6 @@ import Global_Params
 
 import torch
 from torch import nn
-from torch.nn import functional as F
 
 from torch.nn import (
     Conv2d,
@@ -25,13 +20,8 @@ from torch.nn import (
     MaxPool2d,
     Flatten,
     Sequential,
-    CrossEntropyLoss,
 )
 
-from torch.utils.tensorboard.writer import SummaryWriter
-
-import torchvision
-from torch.utils.data import DataLoader
 
 chess_pieces = Global_Params.Chess_pieces
 
@@ -57,8 +47,8 @@ print(id_to_species)
 # define transform
 transform = transforms.Compose(
     [
-        transforms.Resize((size, size)),  # 做的第一步转换
-        transforms.ToTensor(),  # 第二步转换，作用：第一转换成Tensor，第二将图片取值范围转换成0-1之间，第三会将channel置前
+        transforms.Resize((size, size)),
+        transforms.ToTensor(),
     ]
 )
 
