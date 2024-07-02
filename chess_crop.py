@@ -3,14 +3,14 @@ from matplotlib import pyplot as plt
 import numpy as np
 from scipy.ndimage import rotate
 import os
-import Global_Params
+import global_params
 import random
 from eprogress import LineProgress
 
 line_progress = LineProgress(title="line progress")
 
 
-chess_pieces = Global_Params.Chess_pieces
+chess_pieces = global_params.Chess_pieces
 
 
 for chess in chess_pieces:

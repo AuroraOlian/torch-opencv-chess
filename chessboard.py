@@ -2,13 +2,12 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 from scipy.ndimage import rotate
-import Global_Params
+import global_params
 import torch
 from PIL import Image
 import numpy as np
 from torchvision import transforms
 import matplotlib.pyplot as plt
-import Global_Params
 
 import torch
 from torch import nn
@@ -23,20 +22,20 @@ from torch.nn import (
 )
 
 
-chess_pieces = Global_Params.Chess_pieces
+chess_pieces = global_params.Chess_pieces
 
 # image = cv2.imread("chess.jpg")
-image = cv2.imread("train/2.jpg")
+image = cv2.imread("chess.jpg")
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 img = cv2.medianBlur(gray, 5)
 circles = cv2.HoughCircles(
     img, cv2.HOUGH_GRADIENT, 1, 20, param1=50, param2=30, minRadius=10, maxRadius=50
 )
 
-size = Global_Params.Size
+size = global_params.Size
 
 
-chess_pieces_types = Global_Params.Chess_pieces_types
+chess_pieces_types = global_params.Chess_pieces_types
 
 species_to_id = dict((c, i) for i, c in enumerate(chess_pieces_types))
 print(species_to_id)
@@ -74,7 +73,7 @@ class Model(nn.Module):
         return x
 
 
-model = torch.load("models/model_1.pth")
+model = torch.load("models/model.pth")
 print(model)
 
 
@@ -99,7 +98,6 @@ if circles is not None:
         img = torch.reshape(roi, (1, 3, size, size))
         output = model(img)
         label = id_to_species[output.argmax(1).item()]
-        # plt.subplot(6, 6, i + 1)
         plt.imshow(roi.permute(1, 2, 0).numpy())
         plt.title(label)
         plt.show()
