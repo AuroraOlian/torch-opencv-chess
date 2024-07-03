@@ -151,15 +151,17 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.model = Sequential(
             Conv2d(3, 32, 5, padding=2),
+            ReLU(),
             MaxPool2d(2),
             Conv2d(32, 32, 5, padding=2),
+            ReLU(),
             MaxPool2d(2),
             Conv2d(32, 64, 5, padding=2),
+            ReLU(),
             MaxPool2d(2),
             Flatten(),
-            Linear(64 * 16 * 16, 14),
-            # Linear(64 * 16 * 16, 64 * 4),
-            # Linear(64 * 4, 14),
+            Linear(64 * 16 * 16, 64 * 4),
+            Linear(64 * 4, 14),
         )
 
     def forward(self, x):
@@ -232,7 +234,7 @@ for epoch in range(epochs):
     print(f"epoch: {epoch}, test_loss: {loss}, test_accuracy: {accuracy*100}%")
     writer.add_scalar("test_loss", loss, epoch)
     writer.add_scalar("test_accuracy", accuracy, epoch)
-    
+
     if accuracy > 0.96:
         torch.save(model, f"models/model.pth")
         exit()

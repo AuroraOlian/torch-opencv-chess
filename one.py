@@ -81,5 +81,5 @@ print(id_to_species)
 model = torch.load("models/model.pth")
 
 path = f"./data/image.png"
-single_test(path)
-# batch_test()
+# single_test(path)
+batch_test()
